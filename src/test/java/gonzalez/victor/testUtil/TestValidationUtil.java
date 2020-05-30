@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 @ContextConfiguration(classes = QnAApplication.class,
         initializers = ConfigFileApplicationContextInitializer.class)
 
-public class TestUtil {
+public class TestValidationUtil {
     @Test
     public void testQuestionLengthIsNotNull() {
         //given
