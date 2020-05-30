@@ -1,0 +1,39 @@
+REQUIREMENTS
+
+ - Ask question
+	- has to be exactly as in DB
+	- if question not in db then default answer
+	- if question is in db then print all answers for it AND split by bullets
+
+ - Add question and answers
+	- q max length 255
+	- a max length 255
+	- a can be split in bullet points
+	- adding a question is in format <question>?"<answer1>" ... "<answerN>"
+	- char ? split question and answer
+	- every question must have 1 or more answers
+
+- ASK A QUESTION
+GIVEN a user ask a question
+WHEN  the system check the question in the DB
+THEN  the question matches exactly in DB
+AND   its answer is shown
+
+GIVEN a user ask a question
+WHEN  the system check the question in the DB
+THEN  the question DOES NOT match exactly in DB
+AND   default answer is shown
+
+GIVEN a user ask a question
+WHEN  the system check the quesiton in DB
+THEN  the question DOES match exactly in DB
+AND   all answers are shown
+AND   answers are shown as bullet points
+
+- ADD QUESTION AND ANSWERS
+GIVEN a user adds a question
+WHEN  the system add the question
+THEN  the question format is validated
+AND   question max length is 255
+AND   answers are not empty
+AND   answers max length is 255
