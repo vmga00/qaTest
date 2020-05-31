@@ -1,12 +1,12 @@
-package gonzalez.victor.service;
+package gonzalez.victor.TestService;
 
 
 import com.cgm.qanda.QnAApplication;
 import com.cgm.qanda.dataaccessobject.QuestionRepository;
-import com.cgm.qanda.dataobject.Answer;
 import com.cgm.qanda.dataobject.Question;
 import com.cgm.qanda.service.QuestionAnswerService;
-import org.junit.Before;
+import gonzalez.victor.TestCore.TestBase;
+import gonzalez.victor.TestCore.TestingUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,11 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.swing.text.html.Option;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,7 +31,7 @@ import static org.assertj.core.api.Assertions.*;
 @ContextConfiguration(classes = QnAApplication.class,
         initializers = ConfigFileApplicationContextInitializer.class)
 
-public class TestQuestionAnswerServiceImpl {
+public class TestQuestionAnswerServiceImpl extends TestBase {
 
     @Autowired
     QuestionAnswerService questionAnswerService;
@@ -42,18 +39,12 @@ public class TestQuestionAnswerServiceImpl {
     @Mock
     QuestionRepository questionRepository;
 
-    @Before
-    public void setup() {
-        Question question = createQuestion("question1", "answer1");
-        questionRepository.save(question);
-    }
-
     @Test
     public void testAddQuestionService() {
         //given
         String questionStr = "question2";
         String answerStr = "answer2a\"anser2b\"answer2c";
-        Question question = createQuestion(questionStr, answerStr);
+        Question question = TestingUtils.createQuestion(questionStr, answerStr);
         //when
         mockServices(question);
         questionAnswerService.addQuestion(questionStr, answerStr);
@@ -71,7 +62,7 @@ public class TestQuestionAnswerServiceImpl {
     public void testGetAnswersService() {
         //given
         String answersText = "question3";
-        Question question = createQuestion("question3", answersText);
+        Question question = TestingUtils.createQuestion("question3", answersText);
         //when
         mockServices(question);
         List<String> answers = questionAnswerService.getAnswers(question.getQuestion());
@@ -84,7 +75,7 @@ public class TestQuestionAnswerServiceImpl {
     @Test
     public void testSaveQuestionService(){
         //given
-        Question question = createQuestion("question4","answer4");
+        Question question = TestingUtils.createQuestion("question4","answer4");
         //when
         mockServices(question);
         Question savedQuestion = saveQuestion(question);
@@ -92,17 +83,6 @@ public class TestQuestionAnswerServiceImpl {
         assertThat(savedQuestion).withFailMessage("The question is null").isNotNull();
         assertThat(savedQuestion.getQuestion()).withFailMessage("The saved question and original question are different").isEqualTo(question.getQuestion());
         assertThat(savedQuestion.getAnswers()).withFailMessage("The saved answers and the original answers are different").isEqualTo(question.getAnswers());
-    }
-
-
-    private Question createQuestion(String questionText, String answerText) {
-        Question question = new Question();
-        question.setQuestion(questionText);
-        Answer answer = new Answer();
-        answer.setAnswer(answerText);
-        Set<Answer> set = new HashSet<>();
-        set.add(answer);
-        return question;
     }
 
     private void mockSaveQuestionService(Question question) {

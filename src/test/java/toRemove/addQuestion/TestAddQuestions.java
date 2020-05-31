@@ -1,4 +1,4 @@
-package gonzalez.victor.addQuestion;
+package toRemove.addQuestion;
 
 import com.cgm.qanda.QnAApplication;
 import com.cgm.qanda.dataaccessobject.QuestionRepository;
