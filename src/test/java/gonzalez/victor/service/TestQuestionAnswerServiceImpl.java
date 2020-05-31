@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -42,33 +43,59 @@ public class TestQuestionAnswerServiceImpl {
     QuestionRepository questionRepository;
 
     @Before
-    public void setup(){
-        Question question = createQuestion("question1","answer1");
+    public void setup() {
+        Question question = createQuestion("question1", "answer1");
         questionRepository.save(question);
     }
 
     @Test
-    public void testAddQuestionServiceWithSingleAnswer(){
+    public void testAddQuestionService() {
         //given
         String questionStr = "question2";
-        String answerStr = "answer2";
-        Question question = createQuestion(questionStr,answerStr);
+        String answerStr = "answer2a\"anser2b\"answer2c";
+        Question question = createQuestion(questionStr, answerStr);
         //when
-        Mockito.when(questionRepository.save(question)).thenReturn(question);
-        Mockito.when(questionRepository.findByQuestion(question.getQuestion())).thenReturn(Optional.ofNullable(question));
-        questionAnswerService.addQuestion(questionStr,answerStr);
+        mockServices(question);
+        questionAnswerService.addQuestion(questionStr, answerStr);
         //then
-        List<String> answers =  questionAnswerService.getAnswers(questionStr);
+        List<String> answers = questionAnswerService.getAnswers(questionStr);
         assertThat(answers).
                 withFailMessage(String.format("\nThe answers are null\n")).
                 isNotNull();
-        assertThat(answers.get(0)).
-                withFailMessage(String.format("\nThe Answer [%s] does not match [%s] \n",answers.get(0),answerStr)).
-                isEqualTo(answerStr);
+        assertThat(answers.size()).
+                withFailMessage(String.format("\nThe answers are null\n")).
+                isEqualTo(answerStr.split("\"").length);
+    }
+
+    @Test
+    public void testGetAnswersService() {
+        //given
+        String answersText = "question3";
+        Question question = createQuestion("question3", answersText);
+        //when
+        mockServices(question);
+        List<String> answers = questionAnswerService.getAnswers(question.getQuestion());
+        //then
+        assertThat(answers).withFailMessage("The answers to the question were null").isNotNull();
+        assertThat(answers.isEmpty()).withFailMessage("The answers to the question were empty");
+        assertThat(answers.size()).withFailMessage("the size of the answer does not match").isEqualTo(answersText.split("\"").length);
+    }
+
+    @Test
+    public void testSaveQuestionService(){
+        //given
+        Question question = createQuestion("question4","answer4");
+        //when
+        mockServices(question);
+        Question savedQuestion = saveQuestion(question);
+        //then
+        assertThat(savedQuestion).withFailMessage("The question is null").isNotNull();
+        assertThat(savedQuestion.getQuestion()).withFailMessage("The saved question and original question are different").isEqualTo(question.getQuestion());
+        assertThat(savedQuestion.getAnswers()).withFailMessage("The saved answers and the original answers are different").isEqualTo(question.getAnswers());
     }
 
 
-    private Question createQuestion(String questionText, String answerText){
+    private Question createQuestion(String questionText, String answerText) {
         Question question = new Question();
         question.setQuestion(questionText);
         Answer answer = new Answer();
@@ -78,7 +105,27 @@ public class TestQuestionAnswerServiceImpl {
         return question;
     }
 
+    private void mockSaveQuestionService(Question question) {
+        Mockito.when(questionRepository.save(question)).thenReturn(question);
+    }
 
+    private void mockAnswerQuestionService(Question question) {
+        Mockito.when(questionRepository.findByQuestion(question.getQuestion())).thenReturn(Optional.ofNullable(question));
+    }
 
+    private void mockServices(Question question) {
+        mockSaveQuestionService(question);
+        mockAnswerQuestionService(question);
+    }
+
+    private Question saveQuestion(Question question){
+        Question savedQuestion = null;
+        try {
+            savedQuestion = questionAnswerService.save(question);
+        }catch (Exception e){
+            e.addSuppressed(e);
+        }
+        return savedQuestion;
+    }
 
 }
