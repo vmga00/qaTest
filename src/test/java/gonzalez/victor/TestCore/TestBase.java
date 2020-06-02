@@ -5,18 +5,14 @@ import com.cgm.qanda.dataaccessobject.AnswerRepository;
 import com.cgm.qanda.dataaccessobject.QuestionRepository;
 import com.cgm.qanda.dataobject.Answer;
 import com.cgm.qanda.dataobject.Question;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Set;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test")
 @ContextConfiguration(classes = QnAApplication.class,
         initializers = ConfigFileApplicationContextInitializer.class)
 public class TestBase {
@@ -32,6 +28,12 @@ public class TestBase {
         Question question = createQuestion("question1", "answer1");
         questionRepository.save(question);
         saveAnswersToRepo(question);
+    }
+
+    @After
+    public void teardown(){
+        questionRepository.deleteAll();
+        answerRepository.deleteAll();
     }
 
     protected Question createQuestion(String question, String answers) {

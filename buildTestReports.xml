@@ -1,0 +1,17 @@
+<project name="genTestReport" default="reportTests" basedir=".">
+    <description>
+        Generate the HTML report from JUnit XML files
+    </description>
+
+    <target name="reportTests">
+        <property name="reportDir" location="${basedir}/target/testReports"/>
+        <delete dir="${reportDir}"/>
+        <mkdir dir="${reportDir}"/>
+        <junitreport todir="${basedir}/target/testReports">
+            <fileset dir="${basedir}">
+                <include name="**/TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${reportDir}/html"/>
+        </junitreport>
+    </target>
+</project>

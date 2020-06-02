@@ -20,9 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -30,9 +27,7 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("test")
 @ContextConfiguration(classes = QnAApplication.class,
         initializers = ConfigFileApplicationContextInitializer.class)
-
 public class TestQuestionAnswerServiceImpl extends TestBase {
-
     @Autowired
     QuestionAnswerService questionAnswerService;
 
@@ -42,7 +37,7 @@ public class TestQuestionAnswerServiceImpl extends TestBase {
     @Test
     public void testAddQuestionService() {
         //given
-        String questionStr = "question2";
+        String questionStr = "question3";
         String answerStr = "answer2a\"anser2b\"answer2c";
         Question question = TestingUtils.createQuestion(questionStr, answerStr);
         //when
@@ -61,8 +56,8 @@ public class TestQuestionAnswerServiceImpl extends TestBase {
     @Test
     public void testGetAnswersService() {
         //given
-        String answersText = "question3";
-        Question question = TestingUtils.createQuestion("question3", answersText);
+        String answersText = "question4";
+        Question question = TestingUtils.createQuestion("question4", answersText);
         //when
         mockServices(question);
         List<String> answers = questionAnswerService.getAnswers(question.getQuestion());
@@ -73,9 +68,9 @@ public class TestQuestionAnswerServiceImpl extends TestBase {
     }
 
     @Test
-    public void testSaveQuestionService(){
+    public void testSaveQuestionService() {
         //given
-        Question question = TestingUtils.createQuestion("question4","answer4");
+        Question question = TestingUtils.createQuestion("question5", "answer5");
         //when
         mockServices(question);
         Question savedQuestion = saveQuestion(question);
@@ -98,11 +93,11 @@ public class TestQuestionAnswerServiceImpl extends TestBase {
         mockAnswerQuestionService(question);
     }
 
-    private Question saveQuestion(Question question){
+    private Question saveQuestion(Question question) {
         Question savedQuestion = null;
         try {
             savedQuestion = questionAnswerService.save(question);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.addSuppressed(e);
         }
         return savedQuestion;

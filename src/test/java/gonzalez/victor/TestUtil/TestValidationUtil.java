@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("test")
 @ContextConfiguration(classes = QnAApplication.class,
         initializers = ConfigFileApplicationContextInitializer.class)
-
 public class TestValidationUtil extends TestBase {
 
     @Test
